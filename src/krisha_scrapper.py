@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 # 2. not the first floor
 
 
-def get_request(url, headers, card_class):
+def get_request(url, headers, card_class) -> BeautifulSoup:
     # Returns an html text of the request
     req = requests.get(url=url, headers=headers)
     soup = BeautifulSoup(req.text, 'lxml')
@@ -67,13 +67,13 @@ def parse_date(date_class, app_card, month_string) -> str:
                             .strip()
     return date
 
-def parse_url(app_card):
+def parse_url(app_card) -> str:
     # Parses the url of post
     url = 'krisha.kz' + app_card.find('a').get('href')
     return url
 
 
-def writer(path_to_write, row):
+def writer(path_to_write, row) -> None:
     # Writes data to a csv file row by row
     with open(path_to_write, 'a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file, delimiter=';')
