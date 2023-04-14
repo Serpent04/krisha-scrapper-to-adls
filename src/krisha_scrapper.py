@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 # 2. not the first floor
 
 
-def get_request(url, headers, card_class) -> BeautifulSoup:
+def get_request(url, headers, card_class):
     # Returns an html text of the request
     req = requests.get(url=url, headers=headers)
     soup = BeautifulSoup(req.text, 'lxml')
@@ -41,8 +41,9 @@ def parse_address(address_class, app_card) -> str:
                             .split(', ')
     if len(address) > 2:
         address = [address[0], ' '.join(address[1:])]
-    if len(address) == 1:
-        address = ['', address[0]]
+    if len(address) == 1 or address[0] not in ['Алатауский', 'Алмалинский', 'Ауэзовский', 'Бостандыкский',
+                                               'Жетысуский', 'Медеуский', 'Наурызбайский', 'Турксибский']:
+        address = ['', ' '.join(address[0:])]
     return address
 
 
@@ -73,7 +74,7 @@ def parse_url(app_card) -> str:
     return url
 
 
-def writer(path_to_write, row) -> None:
+def writer(path_to_write, row):
     # Writes data to a csv file row by row
     with open(path_to_write, 'a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file, delimiter=';')
@@ -116,7 +117,7 @@ def main():
               f'[floor_not_first]=1&rent-period-switch=%2Farenda%2Fkvartiry&page={page}'
         app_cards = get_request(url=url, headers=headers, card_class=main_card_class)
 
-        if len(app_cards):
+        if page < 3:
             for app in app_cards:
                 # The information of each post formates a new list called row
                 row = []
@@ -148,20 +149,20 @@ def main():
                 writer(path_to_write, row=row)
 
             print(f'Page {page} has been succesfully processed!')
-            # As soon as the app has finished processing a page, page number increases by one
+            # As soon as the app has finished processing the page, the page number increases by one
             page += 1
 
             # In order to bypass pottential blocking, sleep time of 5 to 10 seconds is used
             # This will make the process appear human-like. Shorter sleep time is optional
             time.sleep(random.randint(5,10))
         else:
-            print(f'---------------------------------\n'
+            print('---------------------------------\n'
                   f'Reached the final page, data is ready!')
-            # The part below is optional. It writes scraped data into an ADLS Gen2 container
+            # The part below is optional. It writes scraped data into an Azure Blob Storage container
             # Connection string and container name are to be provided
             # Comment out the code till "break" in case it is not needed
-            print(f'---------------------------------\n'
-                  f'Writing data to the ADLS Gen2 Container')
+            print('---------------------------------\n'
+                  f'Writing data to the Azure Blob Storage Container')
             load_dotenv()
 
             # Create .env file in the working directory and add a connenction string variable
@@ -169,10 +170,10 @@ def main():
             container_name = 'krisha-almaty'
             write_to_ADLS(connection_string, container_name, local_path=path_to_write, city=city)
             if os.path.exists(path_to_write):
-                print(f'--------------------------------\n'
-                      f'Data has been successfully written to the ADLS Gen2 container')
+                print('--------------------------------\n'
+                      f'Data has been successfully written to the Azure Blob Storage container "{container_name}"')
                 os.remove(path_to_write)
-                print(f'--------------------------------\n'
+                print('--------------------------------\n'
                       f'File {path_to_write} has been deleted from local storage')
             else:
                 print(f'File {path_to_write} does not exist')
