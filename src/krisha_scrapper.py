@@ -117,7 +117,7 @@ def main():
               f'[floor_not_first]=1&rent-period-switch=%2Farenda%2Fkvartiry&page={page}'
         app_cards = get_request(url=url, headers=headers, card_class=main_card_class)
 
-        if page < 3:
+        if len(app_cards):
             for app in app_cards:
                 # The information of each post formates a new list called row
                 row = []

@@ -3,7 +3,7 @@ from azure.core.exceptions import ResourceExistsError
 import time
 
 
-def write_to_ADLS(connection_string, container_name, local_path, city) -> None:
+def write_to_ADLS(connection_string, container_name, local_path, city):
     blob_service_client = BlobServiceClient.from_connection_string(connection_string)
 
     try:
