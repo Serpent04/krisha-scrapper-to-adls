@@ -1,4 +1,6 @@
-This project's main goal is to implement webscrapping on krisha.kz and additionally
+-----www.krisha.kz scrapper-----
+
+This project's main goal is to implement webscrapping on www.krisha.kz and additionally
 conduct simple analytics on Almaty rent market using DataBricks. 
 
 Raw data includes data on price, district, address, floor etc. 
@@ -17,4 +19,4 @@ Key stages:
 - Partition and upload processed data to "processed tier" blob in ADLS Gen2.
 - Connect Power BI to the container and create a sample dashboard.
 
-The final application can be used for webscrapping relevant data from krisha.kz in any city.
+The final application can be used for webscrapping relevant data from www.krisha.kz in any city.
