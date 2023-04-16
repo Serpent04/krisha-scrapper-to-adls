@@ -20,3 +20,5 @@ Key stages:
 - Connect Power BI to the container and create a sample dashboard.
 
 The final application can be used for webscrapping relevant data from www.krisha.kz in any city.
+
+![sample dashboard](dashboard/dashboard.png)
